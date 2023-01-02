@@ -3,3 +3,70 @@ title: "PS Final Research Project"
 author: "Roman Mutel, Taras Yaroshko"
 output: html_document
 ---
+
+# Introduction
+
+Since the coffee was brought to Europe, it became the most popular morning drink and formed a huge amount of different cultures around growing, roasting, brewing and consuming coffee beans. Back in the days it replaced beer, fueling the industrialization! And now it provides us an interesting idea for a research project for probability and statistics course!
+
+## Tested Hypothesis
+
+The aim of this work is to test if the coffee consumption per capita is **normally distributed**. Also, we will see, if Europeans **consume more coffee** than Americans. Another interesting question is if there is any relation between the amount of imported coffee beans and reexported (roasted and packed) coffee, or the imported amount relies more on the consumers, not the roasteries.
+
+## Notes on the Data
+
+The research is based on [International Coffee Organization](https://www.ico.org/new_historical.asp?section=Statistics) data, which brings us the data about coffee production, trade, consumption, etc. of ICO member countries from 1990 up to 2019. We will analyze only the 2019 year statistics, since it is the last possible year, and also the trade was not affected by COVID-19 before 2020.
+
+Another important data source is [World Development Indicators](https://data.worldbank.org/indicator/SP.POP.TOTL), which provides the data about countries population. Since we would like **identical** random variables, using absolute values **is not correct**, so we have to preprocess the data and transform it from *coffee-bags-per-country* into *kilograms-per-capita*. The data is preprocessed using the Python script one can find in the Github repository.
+
+Another important moment -- Luxembourg statistic is abnormally large due to the size of the country and the high percentage of urban citizens. Therefore we decided to exclude it from our analysis to have no anomalies. Sorry, Luxembourg.
+
+# Data Overview
+
+Our dataset contains data about 32 countries which import, consume and reexport coffee. The values are in kilogram per capita Let us see main statistics of the dataframe and visualize it!
+
+```{r}
+coffee_data <- read.csv(file="datasets/Coffee_Dataset_2019.csv")
+coffee_data
+summary(coffee_data)
+hist(coffee_data$imports,
+     col = "blanchedalmond",
+     main = "Imports in kg per capita",
+     xlab = "kg/person"
+)
+hist(coffee_data$reexports,
+     col = "chocolate",
+     main = "Re-exports in kg per capita",
+     xlab = "kg/person"
+)
+hist(coffee_data$consumption,
+     col = "brown",
+     main = "Consumption in kg per capita",
+     xlab = "kg/person"
+)
+```
+
+From the first look, we can conclude that most of the countries reexport quite small amount of coffee. This might happen because of the the traditions and/or because of the location of the big ports (Belgium, Netherlands, Germany, and, unexpectedly, Slovenia and Switzerland are among the leaders)
+
+Imports and consumption values are more "normally" distributed and there seems to be less anomalies. Let us proceed with the first test!
+
+# Testing the Normality
+
+As was mentioned, imports and consumption seem more "normally" distributed at the first look (even though Finland is far ahead of the other countries, most probably because of the small daytime length. But we should not be fooled and trust the numbers! To acquire the numbers, let us perform a **Kolmogorov goodness-of-fit test!**
+
+Kolmogorov test for the **imports**:
+
+```{r}
+mu <- mean(coffee_data$imports)
+sigma <- sd(coffee_data$imports)
+ks.test(coffee_data$imports, "pnorm", mu, sigma)
+```
+
+Kolmogorov test on normality of the imports gives us **p-value of 0.088**, which is small, but not enough ( (\>0.05) to reject the null hypothesis, which states that the data is normally distributed. We cannot surely reject the hypothesis that the data is normally distributed.
+
+```{r}
+mu <- mean(coffee_data$consumption)
+sigma <- sd(coffee_data$consumption)
+ks.test(coffee_data$consumption, "pnorm", mu, sigma)
+```
+
+Unlike the case with the imports, KS test on the consumption data results in **p-value of 0.4**, which is a large p-value. Thus, we cannot reject the hypothesis which suggested the data to be normally distributed. We should take into account, that the sample is of medium size (32 random variables), thus Kolmogorov test can be **inaccurate**, yet it still has meaning and shows us, that **consumption of coffee is normally distributed** among selected countries.
