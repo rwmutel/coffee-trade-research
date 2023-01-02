@@ -4,6 +4,10 @@ author: "Roman Mutel, Taras Yaroshko"
 output: html_document
 ---
 
+```{r}
+library(BSDA)
+```
+
 # Introduction
 
 Since the coffee was brought to Europe, it became the most popular morning drink and formed a huge amount of different cultures around growing, roasting, brewing and consuming coffee beans. Back in the days it replaced beer, fueling the industrialization! And now it provides us an interesting idea for a research project for probability and statistics course!
@@ -51,7 +55,7 @@ Imports and consumption values are more "normally" distributed and there seems t
 
 # Testing the Normality
 
-As was mentioned, imports and consumption seem more "normally" distributed at the first look (even though Finland is far ahead of the other countries, most probably because of the small daytime length. But we should not be fooled and trust the numbers! To acquire the numbers, let us perform a **Kolmogorov goodness-of-fit test!**
+As was mentioned, imports and consumption seem more "normally" distributed at the first look (even though Finland is far ahead of the other countries, most probably because of the small daytime length). But we should not be fooled and trust the numbers! To acquire the numbers, let us perform a **Kolmogorov goodness-of-fit test!**
 
 Kolmogorov test for the **imports**:
 
@@ -70,3 +74,19 @@ ks.test(coffee_data$consumption, "pnorm", mu, sigma)
 ```
 
 Unlike the case with the imports, KS test on the consumption data results in **p-value of 0.4**, which is a large p-value. Thus, we cannot reject the hypothesis which suggested the data to be normally distributed. We should take into account, that the sample is of medium size (32 random variables), thus Kolmogorov test can be **inaccurate**, yet it still has meaning and shows us, that **consumption of coffee is normally distributed** among selected countries.
+
+# Testing the equality of means
+
+Another thing we wanted to check is who drinks more coffee on average: Europeans or Americans. We all know that every American starts their day with a fresh cup of coffee, but, at the same time, there are lots of European countries that are famous for their delicious cappuccino or espresso. So, who is the winner here?
+
+To determine it, we will use the **t-test**, which is applicable when we want to check the equality of means (and the variance of samples is unknown).
+
+Constructing the null-hypothesis and the alternative hypothesis: $H_0: \mu = \mu_0$ vs. $H_1: \mu > \mu_0$. For the one-sided alternative $H_1$ we are going to use $C_{\alpha} = \{x \in \mathbb{R}^n | t(x) \geq t_{1-\alpha}^{(n-1)}\}$.\
+
+```{r}
+us_mean <- coffee_data$consumption[32] # index of United States row
+european_data <- coffee_data$consumption[0:31]
+t.test(european, mu=us_mean, alternative = "greater")
+```
+
+What does this tell us? Well, the **p-value** that we got is 0.1086, therefore, we fail to reject our null-hypothesis (which stated that the mean of coffee consumption in European countries is equal to the US consumption rate). That means that, although the daily life of those who consume coffee in Europe and US may be different, they drink pretty much the same amount of coffee per day.
