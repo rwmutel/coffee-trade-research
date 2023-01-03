@@ -110,6 +110,8 @@ print(summary(import_reexport_lm))
 cat("Correlation coefficient between re-export and import is: ", cor(reexport, import))
 ```
 
+As we see, the correlation coefficient between re-export and import is really high (0.9196934). As we know, a correlation of -1.0 indicates a perfect negative correlation, and a correlation of 1.0 indicates a perfect positive correlation. Therefore, we can conclude that there is a surprisingly high relationship between those two processes. For instance, when the amount of import increases, the amount of re-export increases, too. We can say that when import moves higher (or lower), re-export moves in the same direction with *almost* the same magnitude.
+
 ```{r}
 consumption <- coffee_data$consumption
 consumption_reexport_lm <- lm(consumption~import)
@@ -121,3 +123,7 @@ print(summary(consumption_reexport_lm))
 ```{r}
 cat("Correlation coefficient between consumption and import is: ", cor(consumption, import))
 ```
+
+On the other hand, the correlation coefficient for consumption and import is a little bit higher than **0.5**. So, one can say that these processes are *moderately* *correlated*. This is an interesting observation, because we mostly associate more import with more consumption (supposedly, there is higher demand in particular product from domestic consumers, so the country buys more of it to satisfy such demand).
+
+Also, we have to remember that correlation does not imply causation -- a lot of different other things (often called confounding variables) may be involved, and the more accurate explanation we want to get, the more variables we have to include in our calculations so that we can understand the data better.
