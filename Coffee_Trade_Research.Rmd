@@ -4,17 +4,13 @@ author: "Roman Mutel, Taras Yaroshko"
 output: html_document
 ---
 
-```{r}
-library(BSDA)
-```
-
 # Introduction
 
 Since the coffee was brought to Europe, it became the most popular morning drink and formed a huge amount of different cultures around growing, roasting, brewing and consuming coffee beans. Back in the days it replaced beer, fueling the industrialization! And now it provides us an interesting idea for a research project for probability and statistics course!
 
 ## Tested Hypothesis
 
-The aim of this work is to test if the coffee consumption per capita is **normally distributed**. Also, we will see, if Europeans **consume more coffee** than Americans. Another interesting question is if there is any relation between the amount of imported coffee beans and reexported (roasted and packed) coffee, or the imported amount relies more on the consumers, not the roasteries.
+The aim of this work is to test if the coffee consumption per capita is **normally distributed**. Also, we will see, if Europeans **consume more coffee** than Americans. Another interesting question is how strong is the relation between the amount of imported coffee beans and reexported (roasted and packed) coffee. Is the imported amount relies more on the consumers, or on the roasters?
 
 ## Notes on the Data
 
@@ -65,7 +61,7 @@ sigma <- sd(coffee_data$imports)
 ks.test(coffee_data$imports, "pnorm", mu, sigma)
 ```
 
-Kolmogorov test on normality of the imports gives us **p-value of 0.088**, which is small, but not enough ( (\>0.05) to reject the null hypothesis, which states that the data is normally distributed. We cannot surely reject the hypothesis that the data is normally distributed.
+Kolmogorov test on normality of the imports gives us **p-value of 0.088**, which is small, but not enough ( (\>0.05) to reject the null hypothesis, which states that the data is normally distributed. We cannot surely reject the hypothesis that the data is normally distributed, but since the p-value is relatively small, it would not be wise to say that the data is perfectly normal.
 
 ```{r}
 mu <- mean(coffee_data$consumption)
@@ -77,7 +73,7 @@ Unlike the case with the imports, KS test on the consumption data results in **p
 
 # Testing the equality of means
 
-Another thing we wanted to check is who drinks more coffee on average: Europeans or Americans. We all know that every American starts their day with a fresh cup of coffee, but, at the same time, there are lots of European countries that are famous for their delicious cappuccino or espresso. So, who is the winner here?
+An interesting question is who drinks more coffee on average: Europeans or Americans? We all know that every American starts their day with a fresh cup of coffee, but, at the same time, there are lots of European countries that are famous for their delicious cappuccino or espresso. So, who is the winner here?
 
 To determine it, we will use the **t-test**, which is applicable when we want to check the equality of means (and the variance of samples is unknown).
 
@@ -89,13 +85,15 @@ european_data <- coffee_data$consumption[0:31]
 t.test(european_data, mu=us_mean, alternative = "greater")
 ```
 
+## Summary
+
 What does this tell us? Well, the **p-value** that we got is 0.1086, therefore, we fail to reject our null-hypothesis (which stated that the mean of coffee consumption in European countries is equal to the US consumption rate). That means that, although the daily life of those who consume coffee in Europe and US may be different, they drink pretty much the same amount of coffee per day.
 
 # Testing the relation between import and re-export
 
-The other thing we want to check now is the relation import and re-export, and, if it exists, how it compares with the relation between import and consumption. In other words, who is more responsible for what happens with imported coffee: domestic consumers or governmental structures who decide how much coffee to ship or transmit to other countries.
+Who is more responsible for what happens with imported coffee: domestic consumers or roasters, which process and resell coffee beans?
 
-Let's start with defining our linear model.
+Let's start with defining our linear model:
 
 ```{r}
 import <- coffee_data$imports
@@ -124,6 +122,8 @@ print(summary(consumption_reexport_lm))
 cat("Correlation coefficient between consumption and import is: ", cor(consumption, import))
 ```
 
-On the other hand, the correlation coefficient for consumption and import is a little bit higher than **0.5**. So, one can say that these processes are *moderately* *correlated*. This is an interesting observation, because we mostly associate more import with more consumption (supposedly, there is higher demand in particular product from domestic consumers, so the country buys more of it to satisfy such demand).
+## Summary
+
+On the other hand, the correlation coefficient for consumption and import is a little bit higher than **0.5**. So, one can say that these processes are *moderately* *correlated*. This is an interesting observation, because we mostly associate more import with more consumption, however, coffee roasters have more influence on the import statistics.
 
 Also, we have to remember that correlation does not imply causation -- a lot of different other things (often called confounding variables) may be involved, and the more accurate explanation we want to get, the more variables we have to include in our calculations so that we can understand the data better.
