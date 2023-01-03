@@ -86,7 +86,7 @@ Constructing the null-hypothesis and the alternative hypothesis: $H_0: \mu = \mu
 ```{r}
 us_mean <- coffee_data$consumption[32] # index of United States row
 european_data <- coffee_data$consumption[0:31]
-t.test(european, mu=us_mean, alternative = "greater")
+t.test(european_data, mu=us_mean, alternative = "greater")
 ```
 
 What does this tell us? Well, the **p-value** that we got is 0.1086, therefore, we fail to reject our null-hypothesis (which stated that the mean of coffee consumption in European countries is equal to the US consumption rate). That means that, although the daily life of those who consume coffee in Europe and US may be different, they drink pretty much the same amount of coffee per day.
