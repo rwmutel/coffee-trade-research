@@ -90,3 +90,34 @@ t.test(european_data, mu=us_mean, alternative = "greater")
 ```
 
 What does this tell us? Well, the **p-value** that we got is 0.1086, therefore, we fail to reject our null-hypothesis (which stated that the mean of coffee consumption in European countries is equal to the US consumption rate). That means that, although the daily life of those who consume coffee in Europe and US may be different, they drink pretty much the same amount of coffee per day.
+
+# Testing the relation between import and re-export
+
+The other thing we want to check now is the relation import and re-export, and, if it exists, how it compares with the relation between import and consumption. In other words, who is more responsible for what happens with imported coffee: domestic consumers or governmental structures who decide how much coffee to ship or transmit to other countries.
+
+Let's start with defining our linear model.
+
+```{r}
+import <- coffee_data$imports
+reexport <- coffee_data$reexports
+import_reexport_lm <- lm(reexport~import)
+plot(import, reexport, pch=19, col="blue")
+abline(import_reexport_lm, col = "red")
+print(summary(import_reexport_lm))
+```
+
+```{r}
+cat("Correlation coefficient between re-export and import is: ", cor(reexport, import))
+```
+
+```{r}
+consumption <- coffee_data$consumption
+consumption_reexport_lm <- lm(consumption~import)
+plot(import, consumption, pch=19, col="blue")
+abline(consumption_reexport_lm, col = "red")
+print(summary(consumption_reexport_lm))
+```
+
+```{r}
+cat("Correlation coefficient between consumption and import is: ", cor(consumption, import))
+```
